@@ -1,18 +1,21 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { CandidatoCard } from "../components/CandidatoCard";
-import { Candidato } from "../@types/GlobalContextType";
+import { useContext, useEffect, useState } from "react";
+import { Candidato } from "../../@types/types";
 import { useParams } from "react-router-dom";
+import backendVotosApi from "../../api/backendVotosApi";
+import { GlobalContext } from "../../contexts/globalContext";
+import { GlobalContextType } from "../../@types/GlobalContextType";
+import { CandidatoCard2 } from "./components/CandidatoCard2";
 
-export const CandidatosPorCampania = () => {
-    const { idCampania, ...rest } = useParams();
+export const PagesCandidatosPorCampania = () => {
+    const { idCampania } = useParams();
     const [candidatos, setCandidatos] = useState<Candidato[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const context = useContext<GlobalContextType | undefined>(GlobalContext);
 
     useEffect(() => {
         const fetchCandidatos = async () => {
             try {
-                const response = await axios.get(import.meta.env.VITE_URL_API + `/api/candidatos/${idCampania}`);
+                const response = await backendVotosApi.get(`/api/candidatos/${idCampania}`);
                 console.log(response)
                 setCandidatos(response.data);
             } catch (error) {
@@ -24,6 +27,11 @@ export const CandidatosPorCampania = () => {
 
         fetchCandidatos();
     }, [idCampania]);
+
+    useEffect(() => {
+        console.log(context?.global)
+    }, [context?.global])
+
 
     if (loading) {
         return <p>Cargando candidatos...</p>;
@@ -37,8 +45,10 @@ export const CandidatosPorCampania = () => {
         <div className="container">
             <div className="row">
                 {candidatos.map((candidato) => (
-                    <CandidatoCard
+                    <CandidatoCard2
                         key={candidato.idcandidato}
+                        candidatoId={candidato.idcandidato}
+                        campaniaId={candidato.idcampania}
                         nombre={candidato.ingeniero}
                         descripcion={candidato.descripcion}
                     />

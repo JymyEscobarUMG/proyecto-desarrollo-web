@@ -1,0 +1,101 @@
+h3 {
+    font-size: 1.17em;
+    font-weight: bold;
+}
+
+.campaign-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 15px;
+    background-color: #fff;
+    width: 300px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+    text-align: center;
+}
+
+.campaign-card:hover {
+    transform: scale(1.02);
+}
+
+.campaign-card h2 {
+    font-size: 1.2rem;
+    margin: 15px 0;
+    color: #333;
+}
+
+.campaign-card p {
+    font-size: 1rem;
+    color: #666;
+}
+
+.campaign-card .icon img {
+    width: 40px;
+}
+
+.details {
+    margin-top: 10px;
+    border: 1px solid #003865;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #e8f4f8;
+}
+
+.details label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+.candidates h3 {
+    margin: 10px 0;
+    color: #003865;
+}
+
+.candidates ul {
+    padding-left: 20px;
+}
+
+.candidates li {
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-candidate-btn,
+.remove-candidate-btn {
+    background-color: #003865;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.add-candidate-btn:hover,
+.remove-candidate-btn:hover {
+    background-color: #005b82;
+}
+
+.remove-candidate-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.remove-candidate-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.campaniaActiva {
+    color: green;
+}
+
+.campaniaFinalizada {
+    color: red;
+}

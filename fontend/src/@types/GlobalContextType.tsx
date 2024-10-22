@@ -1,12 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
 
-export interface GlobalContextType {
-    global: any;
-    setGlobal: Dispatch<SetStateAction<any>>;
+export interface GlobalType {
+    autorizado: boolean | undefined;
+    rolid: number;
+
 }
 
-export interface Candidato {
-    idcandidato: number;
-    descripcion: string;
-    ingeniero: string;
+export interface GlobalContextType {
+    global: GlobalType;
+    setGlobal: Dispatch<SetStateAction<GlobalType>>;
 }

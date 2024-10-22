@@ -1,10 +1,11 @@
-import axios from "axios";
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GlobalContext } from "../contexts/globalContext";
-import { GlobalContextType } from "../@types/GlobalContextType";
+import { GlobalContext } from "../../contexts/globalContext";
+import { GlobalContextType } from "../../@types/GlobalContextType";
+import backendVotosApi from "../../api/backendVotosApi";
+import style from '../../assets/css/login.module.scss'
 
-export const Login = () => {
+export const PagesLogin = () => {
     const [formData, setFormData] = useState({
         numeroColegiado: '',
         dpi: '',
@@ -23,11 +24,17 @@ export const Login = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const respuesta = await axios.post(import.meta.env.VITE_URL_API + '/api/usuarios/loginIngeniero', formData);
+            const respuesta = await backendVotosApi.post('/api/usuarios/loginIngeniero', formData);
             console.log(respuesta);
-            context?.setGlobal(respuesta.data.user);
+            localStorage.setItem('ProyectoFinal-Token', respuesta.data.token);
 
-            navigate('/login/home');
+            context?.setGlobal((prevGlobal) => ({
+                ...prevGlobal,
+                rolid: respuesta.data.usuario.rolid,
+                autorizado: true,
+            }));
+
+            navigate('/Campanias');
         } catch (error: any) {
             console.log(error)
             setError(error.response?.data?.msg || "Error en el inicio de sesión");
@@ -35,29 +42,29 @@ export const Login = () => {
     };
 
     return (
-        <div className="container">
-            <h2>Login Ingeniero</h2>
+        <div className={style.container}>
+            <h2>Acceso al Sistema Ingenieros</h2>
             {error && <div className="alert alert-danger">{error}</div>}
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
+                <div className={style['form-group']}>
                     <label>Numero Colegiado</label>
                     <input type="text" name="numeroColegiado" className="form-control" value={formData.numeroColegiado} onChange={handleChange} required />
                 </div>
-                <div className="form-group">
+                <div className={style['form-group']}>
                     <label>DPI</label>
                     <input type="text" name="dpi" className="form-control" value={formData.dpi} onChange={handleChange} required />
                 </div>
-                <div className="form-group">
+                <div className={style['form-group']}>
                     <label>Fecha Nacimiento</label>
-                    <input type="email" name="fechaNacimiento" className="form-control" value={formData.fechaNacimiento} onChange={handleChange} required />
+                    <input type="date" name="fechaNacimiento" className="form-control" value={formData.fechaNacimiento} onChange={handleChange} required />
                 </div>
-                <div className="form-group">
+                <div className={style['form-group']}>
                     <label>Contraseña</label>
                     <input type="password" name="password" className="form-control" value={formData.password} onChange={handleChange} required />
                 </div>
-                <button type="submit" className="btn btn-primary">Iniciar sesión</button>
+                <button type="submit" className={`btn btn-primary ${style['button-blue']} `}>Iniciar sesión</button>
 
-                <button type="button" className="btn btn-secondary mt-2" onClick={() => { navigate('/register') }}>Registrar</button>
+                <button type="button" className="btn btn-secondary  mt-2" onClick={() => { navigate('/register') }}>Registrar</button>
             </form>
         </div>
     );

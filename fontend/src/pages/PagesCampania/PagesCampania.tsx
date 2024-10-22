@@ -1,0 +1,54 @@
+import style from "../../assets/css/pagesCampania.module.scss"
+import { useEffect, useState } from "react";
+import { Campania } from "../../@types/types";
+import { CampaniaCard } from "./components/CampaniaCard";
+import backendVotosApi from "../../api/backendVotosApi";
+import { EncabezadoSistema } from "../../core/components";
+import { CampaniaAgregarModal } from "./components/CampaniaAgregarModal";
+export const PagesCampania = () => {
+    const [campanias, setCampanias] = useState<Campania[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const fetchCampanias = async () => {
+        try {
+            const respuesta = await backendVotosApi.get('/api/campanias');
+            console.log(respuesta)
+            setCampanias(respuesta.data);
+        } catch (err) {
+            setError('Error al cargar las campañas');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchCampanias();
+    }, []);
+
+    if (loading) {
+        return <p>Cargando campañas...</p>;
+    }
+
+    if (error) {
+        return <p>{error}</p>;
+    }
+
+    return (
+        <div className="container-fluid">
+            <EncabezadoSistema titulo="Administración de Campañas" />
+
+            <main>
+                <section className={style['campaign-grid']}>
+                    {campanias.map((campania) => (
+                        <div className="col xs-12 md-6 lg-4" key={campania.idcampania}>
+                            <CampaniaCard campania={campania} />
+                        </div>
+                    ))}
+
+                    <CampaniaAgregarModal onFetchCampanias={fetchCampanias} />
+                </section>
+            </main>
+        </div>
+    );
+}

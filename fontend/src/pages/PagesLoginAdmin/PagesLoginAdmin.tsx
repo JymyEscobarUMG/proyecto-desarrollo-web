@@ -1,10 +1,11 @@
-import axios from "axios";
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GlobalContext } from "../contexts/globalContext";
-import { GlobalContextType } from "../@types/GlobalContextType";
+import { GlobalContext } from "../../contexts/globalContext";
+import { GlobalContextType } from "../../@types/GlobalContextType";
+import backendVotosApi from "../../api/backendVotosApi";
+import style from '../../assets/css/login.module.scss'
 
-export const LoginAdmin = () => {
+export const PagesLoginAdmin = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -21,9 +22,15 @@ export const LoginAdmin = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const respuesta = await axios.post(import.meta.env.VITE_URL_API + '/api/usuarios/loginAdmin', formData);
+            const respuesta = await backendVotosApi.post('/api/usuarios/loginAdmin', formData);
             console.log(respuesta);
-            context?.setGlobal(respuesta.data.user);
+            localStorage.setItem('ProyectoFinal-Token', respuesta.data.token);
+
+            context?.setGlobal((prevGlobal) => ({
+                ...prevGlobal,
+                rolid: respuesta.data.usuario.rolid,
+                autorizado: true,
+            }));
 
             navigate('/Admin/login/home');
         } catch (error: any) {
@@ -33,19 +40,19 @@ export const LoginAdmin = () => {
     };
 
     return (
-        <div className="container">
+        <div className={style.container}>
             <h2>Login Administrativo</h2>
             {error && <div className="alert alert-danger">{error}</div>}
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
+                <div className={style['form-group']}>
                     <label>Email</label>
                     <input type="email" name="email" className="form-control" value={formData.email} onChange={handleChange} required />
                 </div>
-                <div className="form-group">
+                <div className={style['form-group']}>
                     <label>Contraseña</label>
                     <input type="password" name="password" className="form-control" value={formData.password} onChange={handleChange} required />
                 </div>
-                <button type="submit" className="btn btn-primary">Iniciar sesión</button>
+                <button type="submit" className={`btn btn-primary ${style['button-blue']} `}>Iniciar sesión</button>
 
                 <button type="button" className="btn btn-secondary mt-2" onClick={() => { navigate('/Admin/register') }}>Registrar</button>
             </form>
