@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import pool from "../db/conexion";
+import { InuevoUsuarioAdmin, InuevoUsuarioInge, IpostLoginAdmin, IpostLoginInge, IpostRegistrarAdmin, IpostRegistrarInge, IqueryLoginAdmin, IqueryLoginInge, IusuarioToken } from "../@types/usuarios.types";
 const bcryptjs = require('bcryptjs');
 const { generarJWT } = require('../helpers/generar-jwt')
 
@@ -11,12 +12,12 @@ export const getUsuarios = async (req: Request, res: Response) => {
 }
 
 export const postLoginInge = async (req: Request, res: Response) => {
-    const { numeroColegiado, dpi, fechaNacimiento, password } = req.body;
+    const { numeroColegiado, dpi, fechaNacimiento, password }: IpostLoginInge = req.body;
 
     try {
         // Verificar si el usuario existe
         const query = {
-            text: `SELECT u.idusuariosistema, u.nombrecompleto, u.email, u.contrasenia, i.idingeniero 
+            text: `SELECT u.idusuariosistema, u.nombrecompleto, u.email, u.contrasenia, i.idingeniero, u.rolid
             FROM usuariosistema u INNER JOIN ingeniero i ON u.idusuariosistema = i.usuariosistemaid 
             WHERE i.numerocolegiado = $1 AND i.dpi = $2 AND fechanacimiento = $3`,
             values: [numeroColegiado, dpi, fechaNacimiento],
@@ -24,7 +25,7 @@ export const postLoginInge = async (req: Request, res: Response) => {
 
         const respuesta = await pool.query(query);
 
-        const usuario = respuesta.rows[0];
+        const usuario: IqueryLoginInge = respuesta.rows[0];
 
         if (!usuario) {
             res.status(400).json({
@@ -45,8 +46,14 @@ export const postLoginInge = async (req: Request, res: Response) => {
         // Generar el JWT
         const token = await generarJWT(usuario.idusuariosistema);
 
+        const nuevoUsuario: InuevoUsuarioInge = {
+            nombrecompleto: usuario.nombrecompleto,
+            email: usuario.email,
+            rolid: usuario.rolid
+        }
+
         res.json({
-            usuario,
+            usuario: nuevoUsuario,
             token
         })
 
@@ -59,19 +66,19 @@ export const postLoginInge = async (req: Request, res: Response) => {
 }
 
 export const postLoginAdmin = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
+    const { email, password }: IpostLoginAdmin = req.body;
 
     try {
         // Verificar si el usuario existe
         const query = {
-            text: `SELECT idusuariosistema, nombrecompleto, email, contrasenia 
+            text: `SELECT idusuariosistema, nombrecompleto, email, contrasenia, rolid
             FROM usuariosistema WHERE email = $1 and rolid = 1;`,
             values: [email],
         }
 
         const respuesta = await pool.query(query);
 
-        const usuario = respuesta.rows[0];
+        const usuario: IqueryLoginAdmin = respuesta.rows[0];
         console.log(usuario)
 
         if (!usuario) {
@@ -93,8 +100,14 @@ export const postLoginAdmin = async (req: Request, res: Response) => {
         // Generar el JWT
         const token = await generarJWT(usuario.idusuariosistema);
 
+        const nuevoUsuario: InuevoUsuarioAdmin = {
+            nombrecompleto: usuario.nombrecompleto,
+            email: usuario.email,
+            rolid: usuario.rolid
+        }
+
         res.json({
-            usuario,
+            usuario: nuevoUsuario,
             token
         })
 
@@ -107,7 +120,7 @@ export const postLoginAdmin = async (req: Request, res: Response) => {
 }
 
 export const postRegistrarInge = async (req: Request, res: Response) => {
-    const { nombreCompleto, email, password, numeroColegiado, dpi, fechaNacimiento } = req.body;
+    const { nombreCompleto, email, password, numeroColegiado, dpi, fechaNacimiento }: IpostRegistrarInge = req.body;
 
     // Encriptar la contraseña
     const salt = bcryptjs.genSaltSync();
@@ -121,9 +134,11 @@ export const postRegistrarInge = async (req: Request, res: Response) => {
 
     try {
         const respuesta = await pool.query(query);
-        if (respuesta.rows[0].registrar_usuario_ingeniero.toString().includes("Error:")) {
+        const mensaje: string = respuesta.rows[0].registrar_usuario_ingeniero;
+
+        if (mensaje.includes("Error:")) {
             res.status(500).json({
-                msg: respuesta.rows[0].registrar_usuario_ingeniero
+                msg: mensaje
             });
         } else {
             res.status(201).json({
@@ -142,7 +157,7 @@ export const postRegistrarInge = async (req: Request, res: Response) => {
 }
 
 export const postRegistrarAdmin = async (req: Request, res: Response) => {
-    const { nombreCompleto, email, password } = req.body;
+    const { nombreCompleto, email, password }: IpostRegistrarAdmin = req.body;
 
     const usuarioExistente = await pool.query(
         'SELECT 1 FROM UsuarioSistema WHERE Email = $1',
@@ -180,3 +195,16 @@ export const postRegistrarAdmin = async (req: Request, res: Response) => {
     return;
 }
 
+
+export const revalidarToken = async (req: Request, res: Response) => {
+
+    const { idusuariosistema, nombrecompleto, email, rolid }: IusuarioToken = req.body.usuario;
+
+    // Generar JWT
+    // const token = await generarJWT(idusuariosistema);
+
+    res.status(200).json({
+        nombrecompleto, email, rolid
+        // token
+    })
+}

@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 
-export const generarJWT = ( uid = '' ) => {
+export const generarJWT = ( idusuariosistema = '' ) => {
 
     return new Promise( (resolve, reject) => {
 
-        const payload = { uid };
+        const payload = { idusuariosistema };
 
         jwt.sign( payload, process.env.SECRETORPRIVATEKEY, {
-            expiresIn: '4h'
+            expiresIn: `${process.env.EXPIRES}`
         }, ( err: Error | null, token: string | undefined ) => {
             if ( err ) {
                 console.log(err);

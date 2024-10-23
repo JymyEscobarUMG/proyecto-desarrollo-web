@@ -1,19 +1,31 @@
 import { Request, Response } from "express";
 import pool from "../db/conexion";
+import { IregistrarVoto } from "../@types/votos.types";
 
 export const registrarVoto = async (req: Request, res: Response) => {
-    const { ingenieroId, candidatoId } = req.body;
+    const { usuario, candidatoId, campaniaId }: IregistrarVoto = req.body;
 
+    console.log(usuario)
     try {
         // Llamar al procedimiento almacenado para registrar el voto y actualizar los votos del candidato
         const respuesta = await pool.query(
-            'SELECT registrar_voto($1, $2)',
-            [ingenieroId, candidatoId]
+            'SELECT registrar_voto($1, $2, $3)',
+            [51, candidatoId, campaniaId]
         );
 
-        res.status(201).json({
-            msg: respuesta.rows[0].registrar_voto
-        });
+        const mensaje: string = respuesta.rows[0].registrar_voto;
+        console.log(mensaje)
+
+        if (mensaje.includes("Error:")) {
+            res.status(500).json({
+                msg: mensaje
+            });
+        } else {
+            res.status(201).json({
+                msg: mensaje
+            });
+        }
+        
     } catch (err) {
         console.log(err)
         res.status(500).json({
@@ -26,11 +38,11 @@ export const verConteoVotosPorCampania = async (req: Request, res: Response) => 
     const { idCampania } = req.params;
 
     try {
-        const totalVotosResult = await pool.query('SELECT SUM(NumTotalVotos) AS total_votos FROM Candidato');
-        const totalVotos = totalVotosResult.rows[0].total_votos || 0;
+        const totalVotosResult = await pool.query('SELECT SUM(NumTotalVotos) AS total_votos FROM Candidato WHERE campaniaid = $1', [idCampania]);
+        const totalVotos : number = totalVotosResult.rows[0].total_votos || 0;
 
-        if (totalVotos === 0) {
-            res.status(200).json({ msg: 'Aún no se han registrado votos' });
+        if (totalVotos == 0) {
+            res.status(404).json({ msg: 'Aún no se han registrado votos' });
             return;
         }
 
@@ -38,6 +50,7 @@ export const verConteoVotosPorCampania = async (req: Request, res: Response) => 
             `SELECT 
                 c.IdCandidato, 
                 u.NombreCompleto AS NombreCandidato,
+                c.Descripcion,
                 c.NumTotalVotos, 
                 ((c.NumTotalVotos * 100.0) / $1) AS PorcentajeVotos
             FROM Candidato c

@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { getUsuarios, postLoginInge, postLoginAdmin, postRegistrarInge, postRegistrarAdmin } from "../controllers/usuariosController";
+import { getUsuarios, postLoginInge, postLoginAdmin, postRegistrarInge, postRegistrarAdmin, revalidarToken } from "../controllers/usuariosController";
 import { check } from "express-validator";
-const { validarCampos } = require("../middlewares/validarCampos");
+const { validarCampos, validarJWT } = require("../middlewares");
 
 const userRoutes = Router();
 
@@ -38,6 +38,8 @@ userRoutes.post('/registrarAdministrador', [
     check('password', 'El password debe de ser más de 6 letras').isLength({ min: 6 }),
     validarCampos
 ], postRegistrarAdmin);
+
+userRoutes.get('/validarToken', validarJWT, revalidarToken);
 
 export default userRoutes;
 

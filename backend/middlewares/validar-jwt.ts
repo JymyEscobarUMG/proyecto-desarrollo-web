@@ -1,11 +1,11 @@
 import { NextFunction } from "express";
+import pool from "../db/conexion";
 
-const { response, request} = require('express');
+const { response, request } = require('express');
 const jwt = require('jsonwebtoken');
-const Usuario = require('../models/usuario');
 
 
-const validarJWT = async (req = request, res = response, next: NextFunction ) => {
+export const validarJWT = async (req = request, res = response, next: NextFunction) => {
 
     const token = req.header('x-token');
 
@@ -16,26 +16,21 @@ const validarJWT = async (req = request, res = response, next: NextFunction ) =>
     }
 
     try {
+        const { idusuariosistema } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);        
 
-        const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+        const usuarioExistente = await pool.query(
+            `SELECT u.idusuariosistema, u.nombrecompleto, u.email, u.rolid, i.idingeniero
+            FROM usuariosistema u LEFT JOIN ingeniero i ON u.idusuariosistema = i.usuariosistemaid
+            WHERE idusuariosistema = $1`,
+            [idusuariosistema]
+        );
 
-        // leer el usuario que corresponde al uid
-        const usuario = await Usuario.findById(uid);
-
-        if (!usuario) {
-            return res.status(401).json({
-                msg: 'Token no válido - usuario no existe DB'
-            })
+        if (usuarioExistente.rowCount == null || usuarioExistente.rowCount == 0) {
+            res.status(401).json({ msg: 'Token no válido - usuario no existe DB' });
+            return;
         }
 
-        // Verificar si el uid tiene estado true
-        if (!usuario.estado) {
-            return res.status(401).json({
-                msg: 'Token no válido - usuario con estado: false'
-            })
-        }
-
-        req.usuario = usuario;
+        req.body.usuario = usuarioExistente.rows[0];
         next();
 
     } catch (error) {
@@ -44,8 +39,4 @@ const validarJWT = async (req = request, res = response, next: NextFunction ) =>
             msg: 'Token no válido'
         })
     }
-}
-
-module.exports = {
-    validarJWT
 }

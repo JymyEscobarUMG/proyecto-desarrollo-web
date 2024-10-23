@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import pool from "../db/conexion";
+import { IregistrarCampania } from "../@types/campanias.types";
 
 export const verCampanias = async (req: Request, res: Response) => {
     try {
-        const result = await pool.query('SELECT * FROM Campania ORDER BY idCampania ASC');
+        const result = await pool.query('SELECT idcampania, titulo, descripcion, fechacreacion, fechafinalizacion, estadoid FROM Campania ORDER BY idCampania ASC');
         res.status(200).json(result.rows);
     } catch (err) {
         console.error(err);
@@ -11,15 +12,30 @@ export const verCampanias = async (req: Request, res: Response) => {
     }
 };
 
+export const verCampaniaPorId = async (req: Request, res: Response) => {
+    const { idCampania } = req.params;
+
+    try {
+        const result = await pool.query(
+            'SELECT idcampania, titulo, descripcion, fechacreacion, fechafinalizacion, estadoid FROM Campania WHERE idcampania = $1 ORDER BY idCampania ASC',
+            [idCampania]
+        );
+        res.status(200).json(result.rows[0]);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Error al obtener campañas' });
+    }
+};
+
 export const registrarCampania = async (req: Request, res: Response) => {
-    const { titulo, descripcion } = req.body;
+    const { titulo, descripcion }: IregistrarCampania = req.body;
 
     try {
         const result = await pool.query(
             'INSERT INTO campania (titulo, descripcion, estadoId ) VALUES ($1, $2, 1) RETURNING idcampania, titulo, descripcion; ',
             [titulo, descripcion]
         );
-        res.status(201).json(result.rows);
+        res.status(201).json(result.rows[0]);
     } catch (err) {
         console.error(err);
         res.status(500).json({ msg: 'Error al registrar campaña' });
@@ -31,7 +47,10 @@ export const toggleEstadoCampania = async (req: Request, res: Response) => {
 
     try {
         // Obtener el estado actual de la campaña
-        const result = await pool.query('SELECT EstadoId FROM Campania WHERE IdCampania = $1', [idCampania]);
+        const result = await pool.query(
+            'SELECT EstadoId FROM Campania WHERE IdCampania = $1',
+            [idCampania]
+        );
 
         if (result.rowCount === 0) {
             res.status(404).json({ msg: 'Campaña no encontrada' });
@@ -47,7 +66,7 @@ export const toggleEstadoCampania = async (req: Request, res: Response) => {
         if (estadoActual === 1) {
             // Cambiar a "Finalizado"
             nuevoEstado = 2;
-            fechaFinalizacion = new Date().toLocaleString("en-US", {timeZone: "America/Guatemala"}); // Asignar la fecha actual
+            fechaFinalizacion = new Date().toLocaleString("en-US", { timeZone: "America/Guatemala" }); // Asignar la fecha actual
         } else if (estadoActual === 2) {
             // Cambiar a "Activado"
             nuevoEstado = 1;
