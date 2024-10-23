@@ -1,6 +1,9 @@
 import Swal from "sweetalert2";
 import style from "../../../assets/css/campaniaCard.module.scss"
 import backendVotosApi from "../../../api/backendVotosApi";
+import { useContext } from "react";
+import { GlobalContextType } from "../../../@types/GlobalContextType";
+import { GlobalContext } from "../../../contexts/globalContext";
 
 interface CampaniaCardListCandidatoProps {
     idCandidato: number;
@@ -9,6 +12,7 @@ interface CampaniaCardListCandidatoProps {
 }
 
 export const CampaniaCardListCandidato = ({ idCandidato, nombre, onCandidatoEliminado }: CampaniaCardListCandidatoProps) => {
+    const context = useContext<GlobalContextType | undefined>(GlobalContext);
 
     const onClickEliminarCandidato = async () => {
         const confirmacion = await Swal.fire({
@@ -33,7 +37,7 @@ export const CampaniaCardListCandidato = ({ idCandidato, nombre, onCandidatoElim
                 );
 
                 onCandidatoEliminado(idCandidato);
-            } catch (error : any) {
+            } catch (error: any) {
                 console.error('Error al eliminar el candidato:', error);
 
                 Swal.fire({
@@ -48,9 +52,13 @@ export const CampaniaCardListCandidato = ({ idCandidato, nombre, onCandidatoElim
     return (
         <li>
             {nombre}
-            <span className={style['remove-candidate-btn']} onClick={onClickEliminarCandidato}>
-                <img src="https://img.icons8.com/material-outlined/24/000000/trash.png" alt="Eliminar" />
-            </span>
+            {context?.global.rolid == 1 &&
+                <>
+                    <span className={style['remove-candidate-btn']} onClick={onClickEliminarCandidato}>
+                        <img src="https://img.icons8.com/material-outlined/24/000000/trash.png" alt="Eliminar" />
+                    </span>
+                </>
+            }
         </li>
     )
 }

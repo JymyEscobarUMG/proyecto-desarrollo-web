@@ -1,11 +1,15 @@
 import style from "../../assets/css/pagesCampania.module.scss"
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Campania } from "../../@types/types";
 import { CampaniaCard } from "./components/CampaniaCard";
 import backendVotosApi from "../../api/backendVotosApi";
 import { EncabezadoSistema } from "../../core/components";
 import { CampaniaAgregarModal } from "./components/CampaniaAgregarModal";
+import { GlobalContextType } from "../../@types/GlobalContextType";
+import { GlobalContext } from "../../contexts/globalContext";
+
 export const PagesCampania = () => {
+    const context = useContext<GlobalContextType | undefined>(GlobalContext);
     const [campanias, setCampanias] = useState<Campania[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -46,7 +50,9 @@ export const PagesCampania = () => {
                         </div>
                     ))}
 
-                    <CampaniaAgregarModal onFetchCampanias={fetchCampanias} />
+                    {context?.global.rolid == 1 &&
+                        <CampaniaAgregarModal onFetchCampanias={fetchCampanias} />
+                    }
                 </section>
             </main>
         </div>

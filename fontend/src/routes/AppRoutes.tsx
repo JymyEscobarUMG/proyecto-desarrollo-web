@@ -19,7 +19,6 @@ export const AppRoutes = () => {
                 }));
 
                 localStorage.clear();
-                navigate('/login');
                 return;
             }
 
@@ -74,7 +73,6 @@ export const AppRoutes = () => {
                             <Route path="/" element={<PagesLogin />} />
                             <Route path="/login" element={<PagesLogin />} />
                             <Route path="/register" element={<PagesRegister />} />
-
                             {/* Administrador */}
                             <Route path="/Admin/" element={<PagesLoginAdmin />} />
                             <Route path="/Admin/login" element={<PagesLoginAdmin />} />
