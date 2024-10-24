@@ -1,6 +1,6 @@
 export { CampaniaAgregar } from "./PagesCampania/components/CampaniaAgregar";
 export { PagesCampania } from "./PagesCampania/PagesCampania";
-export { PagesCandidatosPorCampania } from "./PagesCandidato/PagesCandidatosPorCampania";
+// export { PagesCandidatosPorCampania } from "./PagesCandidato/PagesCandidatosPorCampania";
 export { PagesCandidato } from "./PagesCandidato/PagesCandidato";
 export { PagesLogin } from "./PagesLogin/PagesLogin";
 export { PagesLoginAdmin } from "./PagesLoginAdmin/PagesLoginAdmin";
