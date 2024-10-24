@@ -13,7 +13,7 @@ campaniasRoutes.get('/:idCampania', verCampaniaPorId);
 
 campaniasRoutes.post('/registrar', [
     validarJWT,
-    // validarRol([RolId.Administrador]),
+    validarRol([RolId.Administrador]),
     check('titulo', 'El título es obligatorio').not().isEmpty(),
     check('titulo', 'El título tiene que ser menor a 150 caracteres').isLength({ max: 150 }),
     check('descripcion', 'La descripción es obligatoria').not().isEmpty(),
@@ -23,7 +23,7 @@ campaniasRoutes.post('/registrar', [
 
 campaniasRoutes.put('/toggleEstado/:idCampania', [
     validarJWT,
-    // validarRol([RolId.Administrador]),
+    validarRol([RolId.Administrador]),
 ], toggleEstadoCampania);
 
 export default campaniasRoutes;

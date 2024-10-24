@@ -24,7 +24,7 @@ candidatosRoutes.post('/registrar', [
 
 candidatosRoutes.delete('/eliminar/:idCandidato', [
     validarJWT,
-    //validarRol([RolId.Administrador]),
+    validarRol([RolId.Administrador]),
 ], eliminarCandidato);
 
 export default candidatosRoutes;
