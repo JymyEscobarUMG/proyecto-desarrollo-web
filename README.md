@@ -53,9 +53,9 @@ Manual De Usuario: https://drive.google.com/file/d/1xZrhdRtNo-xvOvhwm8YWWsolbBnU
 ## Link's de aplicaciones
 Base De Datos: https://dashboard.render.com/d/dpg-csd7uirv2p9s73fukjag-a/info
 
-Aplicacion Rest Node.js BackEnd: https://dashboard.render.com/web/srv-csd8dct6l47c73f0q9g0
+Aplicacion Rest Node.js BackEnd: https://proyecto-desarrollo-web.onrender.com
 
-Aplicacion React FrontEnd: https://dashboard.render.com/static/srv-csdaj43qf0us73b2iqp0
+Aplicacion React FrontEnd: https://proyecto-desarrollo-web-1.onrender.com
 
 ## El nombre del estudiante que desarrolló la página web.
 Francis Jonathan David Herrarte Ramirez | 9490-21-288
