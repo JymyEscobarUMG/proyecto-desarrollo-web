@@ -49,6 +49,16 @@ export const CampaniaAgregarModal = ({ onFetchCampanias }: CampaniaAgregarModalP
                     return;
                 }
 
+                if (descripcion.length > 500) {
+                    Swal.showValidationMessage('La descripción tiene que ser menor a 500 caracteres');
+                    return;
+                }
+
+                if (titulo.length > 150) {
+                    Swal.showValidationMessage('El título tiene que ser menor a 150 caracteres');
+                    return;
+                }
+
                 return { titulo, descripcion };
             },
         });
@@ -63,9 +73,9 @@ export const CampaniaAgregarModal = ({ onFetchCampanias }: CampaniaAgregarModalP
                     text: 'La campaña ha sido registrada exitosamente.',
                     icon: 'success',
                 });
-                
+
                 onFetchCampanias();
-                
+
                 console.log('Respuesta del servidor:', response.data);
             } catch (err) {
                 Swal.fire({
