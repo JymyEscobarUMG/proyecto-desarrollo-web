@@ -1,4 +1,4 @@
-import { BrowserRouter } from "react-router-dom"
+import { HashRouter } from "react-router-dom"
 import { GlobalProvider } from "./contexts/globalContext"
 import { AppRoutes } from "./routes/AppRoutes"
 
@@ -6,9 +6,9 @@ function App() {
   return (
     <>
       <GlobalProvider>
-        <BrowserRouter>
+        <HashRouter>
           <AppRoutes />
-        </BrowserRouter>
+        </HashRouter>
       </GlobalProvider>
     </>
   )

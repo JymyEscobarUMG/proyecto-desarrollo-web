@@ -10,7 +10,7 @@ export const registrarVoto = async (req: Request, res: Response) => {
         // Llamar al procedimiento almacenado para registrar el voto y actualizar los votos del candidato
         const respuesta = await pool.query(
             'SELECT registrar_voto($1, $2, $3)',
-            [51, candidatoId, campaniaId]
+            [usuario.idingeniero, candidatoId, campaniaId]
         );
 
         const mensaje: string = respuesta.rows[0].registrar_voto;
