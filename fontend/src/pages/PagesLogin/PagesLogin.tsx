@@ -13,13 +13,6 @@ export const PagesLogin = () => {
         password: ''
     });
 
-    const estilosImagen: React.CSSProperties | undefined = {
-        width: '100%',
-        height: '100px',
-        margin: 0,
-        padding: 0,
-    };
-
     const [error, setError] = useState<string>('');
     const context = useContext<GlobalContextType | undefined>(GlobalContext);
     const navigate = useNavigate();
