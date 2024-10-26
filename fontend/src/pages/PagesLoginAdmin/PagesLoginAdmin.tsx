@@ -40,22 +40,31 @@ export const PagesLoginAdmin = () => {
     };
 
     return (
-        <div className={style.container}>
-            <h2>Login Administrativo</h2>
-            {error && <div className="alert alert-danger">{error}</div>}
-            <form onSubmit={handleSubmit}>
-                <div className={style['form-group']}>
-                    <label>Email</label>
-                    <input type="email" name="email" className="form-control" value={formData.email} onChange={handleChange} required />
-                </div>
-                <div className={style['form-group']}>
-                    <label>Contraseña</label>
-                    <input type="password" name="password" className="form-control" value={formData.password} onChange={handleChange} required />
-                </div>
-                <button type="submit" className={`btn btn-primary ${style['button-blue']} `}>Iniciar sesión</button>
+        <>
+            <img
+                width={'100%'}
+                height={'450px'}
+                src="https://i.ibb.co/GfmC02N/Captura-de-Pantalla-2024-10-26-a-la-s-08-02-26.png"
+            />
+            
+            <div className={style.container}>
+                
+                <h2>Login Administrativo</h2>
+                {error && <div className="alert alert-danger">{error}</div>}
+                <form onSubmit={handleSubmit}>
+                    <div className={style['form-group']}>
+                        <label>Email</label>
+                        <input type="email" name="email" className="form-control" value={formData.email} onChange={handleChange} required />
+                    </div>
+                    <div className={style['form-group']}>
+                        <label>Contraseña</label>
+                        <input type="password" name="password" className="form-control" value={formData.password} onChange={handleChange} required />
+                    </div>
+                    <button type="submit" className={`btn btn-primary ${style['button-blue']} `}>Iniciar sesión</button>
 
-                <button type="button" className="btn btn-secondary mt-2" onClick={() => { navigate('/Admin/register') }}>Registrar</button>
-            </form>
-        </div>
+                    <button type="button" className="btn btn-secondary mt-2" onClick={() => { navigate('/Admin/register') }}>Registrar</button>
+                </form>
+            </div>
+        </>
     );
 }

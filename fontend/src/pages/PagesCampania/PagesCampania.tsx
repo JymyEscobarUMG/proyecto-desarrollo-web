@@ -39,22 +39,32 @@ export const PagesCampania = () => {
     }
 
     return (
-        <div className="container-fluid">
-            <EncabezadoSistema titulo="Administración de Campañas" />
 
-            <main>
-                <section className={style['campaign-grid']}>
-                    {campanias.map((campania) => (
-                        <div className="col xs-12 md-6 lg-4" key={campania.idcampania}>
-                            <CampaniaCard campania={campania} />
-                        </div>
-                    ))}
+        <>
+            
+            <div className="container-fluid">
+                <EncabezadoSistema titulo="Administración de Campañas" />
 
-                    {context?.global.rolid == 1 &&
-                        <CampaniaAgregarModal onFetchCampanias={fetchCampanias} />
-                    }
-                </section>
-            </main>
-        </div>
+                <img
+                width={'100%'}
+                height={'450px'}
+                src="https://i.ibb.co/vd0fbR7/Captura-de-Pantalla-2024-10-26-a-la-s-08-18-05.png"
+            />
+
+                <main>
+                    <section className={style['campaign-grid']}>
+                        {campanias.map((campania) => (
+                            <div className="col xs-12 md-6 lg-4" key={campania.idcampania}>
+                                <CampaniaCard campania={campania} />
+                            </div>
+                        ))}
+
+                        {context?.global.rolid == 1 &&
+                            <CampaniaAgregarModal onFetchCampanias={fetchCampanias} />
+                        }
+                    </section>
+                </main>
+            </div>
+        </>
     );
 }

@@ -77,6 +77,12 @@ export const PagesCandidato = () => {
         <div className="container-fluid">
             <EncabezadoSistema titulo="Administración de Candidatos" />
 
+            <img
+                width={'100%'}
+                height={'450px'}
+                src="https://i.ibb.co/JvnN2sZ/Captura-de-Pantalla-2024-10-26-a-la-s-08-37-21.png"
+            />
+
             <Link className="btn btn-secondary mt-2" to='/Campanias'>
                 <img src="https://img.icons8.com/material-outlined/24/000000/left.png" alt="Regresar" className="me-2" />
                 Regresar

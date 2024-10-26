@@ -13,6 +13,13 @@ export const PagesLogin = () => {
         password: ''
     });
 
+    const estilosImagen: React.CSSProperties | undefined = {
+        width: '100%',
+        height: '100px',
+        margin: 0,
+        padding: 0,
+    };
+
     const [error, setError] = useState<string>('');
     const context = useContext<GlobalContextType | undefined>(GlobalContext);
     const navigate = useNavigate();
@@ -42,30 +49,38 @@ export const PagesLogin = () => {
     };
 
     return (
-        <div className={style.container}>
-            <h2>Acceso al Sistema Ingenieros</h2>
-            {error && <div className="alert alert-danger">{error}</div>}
-            <form onSubmit={handleSubmit}>
-                <div className={style['form-group']}>
-                    <label>Numero Colegiado</label>
-                    <input type="text" name="numeroColegiado" className="form-control" value={formData.numeroColegiado} onChange={handleChange} required />
-                </div>
-                <div className={style['form-group']}>
-                    <label>DPI</label>
-                    <input type="text" name="dpi" className="form-control" value={formData.dpi} onChange={handleChange} required />
-                </div>
-                <div className={style['form-group']}>
-                    <label>Fecha Nacimiento</label>
-                    <input type="date" name="fechaNacimiento" className="form-control" value={formData.fechaNacimiento} onChange={handleChange} required />
-                </div>
-                <div className={style['form-group']}>
-                    <label>Contraseña</label>
-                    <input type="password" name="password" className="form-control" value={formData.password} onChange={handleChange} required />
-                </div>
-                <button type="submit" className={`btn btn-primary ${style['button-blue']} `}>Iniciar sesión</button>
+        <>
+            <img
+                width={'100%'}
+                height={'450px'}
+                src="https://i.ibb.co/GfmC02N/Captura-de-Pantalla-2024-10-26-a-la-s-08-02-26.png"
+            />
 
-                <button type="button" className="btn btn-secondary  mt-2" onClick={() => { navigate('/register') }}>Registrar</button>
-            </form>
-        </div>
+            <div className={style.container}>
+                <h2>Acceso al Sistema Ingenieros</h2>
+                {error && <div className="alert alert-danger">{error}</div>}
+                <form onSubmit={handleSubmit}>
+                    <div className={style['form-group']}>
+                        <label>Numero Colegiado</label>
+                        <input type="text" name="numeroColegiado" className="form-control" value={formData.numeroColegiado} onChange={handleChange} required />
+                    </div>
+                    <div className={style['form-group']}>
+                        <label>DPI</label>
+                        <input type="text" name="dpi" className="form-control" value={formData.dpi} onChange={handleChange} required />
+                    </div>
+                    <div className={style['form-group']}>
+                        <label>Fecha Nacimiento</label>
+                        <input type="date" name="fechaNacimiento" className="form-control" value={formData.fechaNacimiento} onChange={handleChange} required />
+                    </div>
+                    <div className={style['form-group']}>
+                        <label>Contraseña</label>
+                        <input type="password" name="password" className="form-control" value={formData.password} onChange={handleChange} required />
+                    </div>
+                    <button type="submit" className={`btn btn-primary ${style['button-blue']} `}>Iniciar sesión</button>
+
+                    <button type="button" className="btn btn-secondary  mt-2" onClick={() => { navigate('/register') }}>Registrar</button>
+                </form>
+            </div>
+        </>
     );
 }
